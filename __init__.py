@@ -1,5 +1,6 @@
 import random
 import sys
+import builtins
 
 def offbyone(item):
     coin = random.choice([-1, 1])
@@ -26,9 +27,23 @@ def print_decorator(func):
         return func(offbyone(*args), **kwargs)
     return wrapped_print
 
-def displayhook(obj):
-    if obj is not None:
-        print(obj)
+def displayhook(value):
+    if value is None:
+        return
+    # Set '_' to None to avoid recursion
+    builtins._ = None
+    text = repr(offbyone(value))
+    try:
+        sys.stdout.write(text)
+    except UnicodeEncodeError:
+        bytes = text.encode(sys.stdout.encoding, 'backslashreplace')
+        if hasattr(sys.stdout, 'buffer'):
+            sys.stdout.buffer.write(bytes)
+        else:
+            text = bytes.decode(sys.stdout.encoding, 'strict')
+            sys.stdout.write(text)
+    sys.stdout.write("\n")
+    builtins._ = value
 
+builtins.print = print_decorator(print)
 sys.displayhook = displayhook
-globals()['__builtins__']['print'] = print_decorator(print)
