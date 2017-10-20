@@ -2,23 +2,18 @@ import random
 import sys
 
 def offbyone(item):
+    coin = random.choice([-1, 1])
     if isinstance(item, bool):
         return not item
     if isinstance(item, (int, float)):
-        return item + random.choice([-1, 1])
+        return item + coin
     if isinstance(item, list):
-        return [x+random.choice([-1, 1]) for x in item]
+        return list(map(offbyone, item))
     if isinstance(item, str):
-        c = random.randint(0, len(item))
-        newitem = ""
-        for i, x in enumerate(item):
-            if i == c:
-                x = chr(ord(x)+random.choice([-1, 1]))
-            newitem += x
-        return newitem
+        c = random.randint(0, len(item)-1)
+        return "".join([chr(ord(l)+coin) if i == c else l for i, l in enumerate(item)])
     if isinstance(item, tuple):
-        a = offbyone(list(item))
-        return tuple(a)
+        return tuple(offbyone(list(item)))
     if isinstance(item, dict):
         for x in item.keys():
             item[x] = offbyone(item[x])
@@ -26,8 +21,14 @@ def offbyone(item):
     else:
         return item
 
+def print_decorator(func):
+    def wrapped_print(*args, **kwargs):
+        return func(offbyone(*args), **kwargs)
+    return wrapped_print
+
 def displayhook(obj):
     if obj is not None:
-        print(offbyone(obj))
+        print(obj)
 
 sys.displayhook = displayhook
+print = print_decorator(print)
