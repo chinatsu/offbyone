@@ -31,4 +31,4 @@ def displayhook(obj):
         print(obj)
 
 sys.displayhook = displayhook
-print = print_decorator(print)
+globals()['__builtins__']['print'] = print_decorator(print)
