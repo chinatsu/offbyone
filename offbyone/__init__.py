@@ -5,14 +5,15 @@ import builtins
 def offbyone(item):
     '''
     `offbyone` will try to change an input value in some way or another.
-    If it's a boolean, the value gets flipped. True becomes False and vice versa.
-    If it's an int or a float, either -1 or +1 gets added to the value.
-    If it's a string, a random character is chosen and either -1 or +1 gets added to its ord() value.
-    If it's a list, `offbyone` gets called on every element.
-    If it's a tuple, `offbyone` gets called on every element. since it's immutable, we need to do some casting
+
+    * If it's a boolean, the value gets flipped. True becomes False and vice versa.
+    * If it's an int or a float, either -1 or +1 gets added to the value.
+    * If it's a string, a random character is chosen and either -1 or +1 gets added to its ord() value.
+    * If it's a list, `offbyone` gets called on every element.
+    * If it's a tuple, `offbyone` gets called on every element. since it's immutable, we need to do some casting
     back and forth to make it work.
-    If it's a dict, `offbyone` gets called on every value.
-    If the input value is an instance of something else, nothing is done.
+    * If it's a dict, `offbyone` gets called on every value.
+    * If the input value is an instance of something else, nothing is done.
     '''
     coin = random.choice([-1, 1]) # choose a random value for changing other values
     if isinstance(item, bool):
@@ -39,7 +40,8 @@ def offbyone(item):
 def print_decorator(func):
     '''
     `print_decorator` is a function meant to wrap the builtin print function.
-    `offbyone` gets called on the input argument before the "real" print function is called.
+
+    * `offbyone` gets called on the input argument before the "real" print function is called.
     '''
     def wrapped_print(*args, **kwargs):
         return func(offbyone(*args), **kwargs) # call offbyone before printing
@@ -48,7 +50,8 @@ def print_decorator(func):
 def displayhook(value):
     '''
     `displayhook` is a function meant to replace sys.displayhook.
-    `offbyone` gets called on the input value before it goes through the rest of the function.
+
+    * `offbyone` gets called on the input value before it goes through the rest of the function.
     '''
     if value is None:
         return
